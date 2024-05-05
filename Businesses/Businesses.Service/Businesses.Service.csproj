@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Validators\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Starly.CrossCutting\Starly.CrossCutting.csproj" />
+    <ProjectReference Include="..\..\Common\Starly.Service\Starly.Service.csproj" />
+    <ProjectReference Include="..\Businesses.Domain\Businesses.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
