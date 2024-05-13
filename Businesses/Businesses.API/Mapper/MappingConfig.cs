@@ -10,9 +10,13 @@ public class MappingConfig
     {
         var mappingConfig = new MapperConfiguration(config =>
         {
-            config.CreateMap<BusinessResponseDto, Business>().ReverseMap();
+            config.CreateMap<BusinessDto, Business>().ReverseMap();
             config.CreateMap<BusinessByIdResponseDto, Business>().ReverseMap();
             config.CreateMap<CategoryDto, Category>().ReverseMap();
+            config.CreateMap<CreateCategoryDto, Category>().ReverseMap();
+            config.CreateMap<CreateBusinessCategoryDto, BusinessCategory>().ReverseMap();
+            config.CreateMap<CreateBusinessHourDto, BusinessHour>().ReverseMap();
+            config.CreateMap<CreateBusinessDto, UpdateBusinessDto>().ReverseMap();
         });
         return mappingConfig;
     }

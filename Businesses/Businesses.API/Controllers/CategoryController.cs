@@ -7,45 +7,46 @@ using Starly.Domain.Utilities;
 
 namespace Businesses.API.Controllers;
 
+
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
-public class BusinessController : Controller
+public class CategoryController : Controller
 {
-    private readonly IBusinessService _businessService;
+    private readonly ICategoryService _categoryService;
 
-    public BusinessController(IBusinessService businessService)
+    public CategoryController(ICategoryService categoryService)
     {
-        _businessService = businessService;
+        _categoryService = categoryService;
     }
 
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> GetAll([FromQuery] BusinessFilter filter)
+    public async Task<IActionResult> GetAll([FromQuery] CategoryFilter filter)
     {
-        var users = await _businessService.GetAllAsync(filter);
-        if (users == null)
+        var categories = await _categoryService.GetAllAsync(filter);
+        if (categories == null)
             return NotFound();
 
-        return Ok(users);
+        return Ok(categories);
     }
 
     [HttpGet("{id}")]
     [Authorize]
     public async Task<IActionResult> GetById(int id)
     {
-        var users = await _businessService.GetById(id);
-        if (users == null)
+        var category = await _categoryService.GetById(id);
+        if (category == null)
             return NotFound();
 
-        return Ok(users);
+        return Ok(category);
     }
 
     [HttpPost]
     [Authorize(Roles = StaticUserRoles.ADMIN)]
-    public async Task<IActionResult> Create([FromBody] CreateBusinessDto createBusinessDto)
+    public async Task<IActionResult> Create([FromBody] CreateCategoryDto categoryDto)
     {
-        var response = await _businessService.Create(createBusinessDto);
+        var response = await _categoryService.Create(categoryDto);
         return Ok(response);
     }
 
@@ -53,15 +54,15 @@ public class BusinessController : Controller
     [Authorize(Roles = StaticUserRoles.ADMIN)]
     public async Task<IActionResult> Delete(int id)
     {
-        var response = await _businessService.Delete(id);
+        var response = await _categoryService.Delete(id);
         return Ok(response);
     }
 
     [HttpPut]
     [Authorize(Roles = StaticUserRoles.ADMIN)]
-    public async Task<IActionResult> Update(int id)
+    public async Task<IActionResult> Update([FromBody] CategoryDto categoryDto)
     {
-        var response = await _businessService.Delete(id);
+        var response = await _categoryService.Update(categoryDto);
         return Ok(response);
     }
 }

@@ -16,4 +16,19 @@ public static class StaticNotifications
     public static Notification UserDeleted = new("UserDeleted", "Usuario removido com sucesso!");
     public static Notification UserActivated = new("UserActivated", "Ativação de usuário alterada com sucesso!");
     #endregion
+
+    #region [Business]
+    public static Notification BusinessSuccess = new("BusinessSuccess", "Empresa inserida com sucesso!");
+    public static Notification BusinessError = new("BusinessError", "Erro ao inserir empresa!");
+    public static Notification BusinessDeleted = new("BusinessDeleted", "Empresa deletada com sucesso!");
+    public static Notification BusinessNotFound = new("BusinessNotFound", "Empresa não encontrada!");
+    #endregion
+
+    #region [Category]
+    public static Notification CategorySuccess = new("CategorySuccess", "Categoria inserida com sucesso!");
+    public static Notification CategoryUpdated = new("CategoryUpdated", "Categoria atualizada com sucesso!");
+    public static Notification CategoryError = new("CategoryError", "Erro ao inserir categoria!");
+    public static Notification CategoryNotFound = new("CategoryNotFound", "Categoria não encontrada!");
+    public static Notification CategoryDeleted = new("CategoryDeleted", "Categoria deletada com sucesso!");
+    #endregion
 }

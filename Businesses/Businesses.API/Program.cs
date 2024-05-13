@@ -58,9 +58,15 @@ services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 #region [DI]
 services.AddScoped<NotificationContext>();
+
 services.AddScoped<IBaseService, BaseService>();
 services.AddScoped<IBusinessService, BusinessService>();
+services.AddScoped<ICategoryService, CategoryService>();
+
+services.AddScoped<IBusinessHourRepository, BusinessHourRepository>();
+services.AddScoped<IBusinessCategoryRepository, BusinessCategoryRepository>();
 services.AddScoped<IBusinessRepository, BusinessRepository>();
+services.AddScoped<ICategoryRepository, CategoryRepository>();
 #endregion
 
 #region [Swagger]            
