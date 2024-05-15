@@ -7,11 +7,11 @@ public class BusinessByIdResponseDto
     public int Id { get; set; }
     public string Name { get; set; }
     public string Phone { get; set; }
-    public string Location { get; set; }
+    public BusinessLocationDto Location { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public bool IsOpenNow { get; set; }
     public List<BusinessPhoto> Photos { get; set; }
-    public List<CategoryDto> Categories { get; set; }
+    public List<BusinessCategoryDto> Categories { get; set; }
     public List<BusinessHour> Hours { get; set; }
 }

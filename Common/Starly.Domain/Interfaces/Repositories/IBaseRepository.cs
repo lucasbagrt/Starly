@@ -7,4 +7,5 @@ public interface IBaseRepository<T, G> where T : class
     Task DeleteAsync(G id);
     Task<IList<T>> SelectAsync();
     Task<T> SelectAsync(G id);
+    IQueryable<T> GetQueryable();
 }

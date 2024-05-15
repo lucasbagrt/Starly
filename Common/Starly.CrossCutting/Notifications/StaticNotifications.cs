@@ -19,6 +19,7 @@ public static class StaticNotifications
 
     #region [Business]
     public static Notification BusinessSuccess = new("BusinessSuccess", "Empresa inserida com sucesso!");
+    public static Notification BusinessUpdated = new("BusinessUpdated", "Empresa atualizada com sucesso!");
     public static Notification BusinessError = new("BusinessError", "Erro ao inserir empresa!");
     public static Notification BusinessDeleted = new("BusinessDeleted", "Empresa deletada com sucesso!");
     public static Notification BusinessNotFound = new("BusinessNotFound", "Empresa não encontrada!");

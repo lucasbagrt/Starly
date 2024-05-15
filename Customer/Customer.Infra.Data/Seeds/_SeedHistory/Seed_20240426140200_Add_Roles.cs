@@ -18,6 +18,7 @@ public class Seed_20240426140200_Add_Roles : Seed
         var roles = new List<Role>
         {
             new(StaticUserRoles.USER),
+            new(StaticUserRoles.ADMIN)
         };
 
         _dbContext.Roles.AddRange(roles);

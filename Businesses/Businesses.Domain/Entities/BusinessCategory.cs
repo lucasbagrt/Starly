@@ -7,6 +7,6 @@ public class BusinessCategory : IEntity<int>
     public int Id { get; set; }
     public int CategoryId { get; set; }
     public int BusinessId { get; set; }
-    public virtual Category Categories { get;}
-    public virtual Business Business { get;}
+    public virtual Category Category { get; set; }
+    public virtual Business Business { get; set; }
 }

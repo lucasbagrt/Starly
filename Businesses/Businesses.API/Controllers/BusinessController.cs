@@ -23,22 +23,22 @@ public class BusinessController : Controller
     [Authorize]
     public async Task<IActionResult> GetAll([FromQuery] BusinessFilter filter)
     {
-        var users = await _businessService.GetAllAsync(filter);
-        if (users == null)
+        var businesses = await _businessService.GetAllAsync(filter);
+        if (businesses == null)
             return NotFound();
 
-        return Ok(users);
+        return Ok(businesses);
     }
 
     [HttpGet("{id}")]
     [Authorize]
     public async Task<IActionResult> GetById(int id)
     {
-        var users = await _businessService.GetById(id);
-        if (users == null)
+        var business = await _businessService.GetById(id);
+        if (business == null)
             return NotFound();
 
-        return Ok(users);
+        return Ok(business);
     }
 
     [HttpPost]
@@ -59,9 +59,9 @@ public class BusinessController : Controller
 
     [HttpPut]
     [Authorize(Roles = StaticUserRoles.ADMIN)]
-    public async Task<IActionResult> Update(int id)
+    public async Task<IActionResult> Update(UpdateBusinessDto updateBusinessDto)
     {
-        var response = await _businessService.Delete(id);
+        var response = await _businessService.Update(updateBusinessDto);
         return Ok(response);
     }
 }

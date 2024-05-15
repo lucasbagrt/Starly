@@ -39,4 +39,8 @@ public abstract class BaseRepository<TObject, G, TContext> : IBaseRepository<TOb
     public async Task<TObject> SelectAsync(G id) =>
         await _dataContext.Set<TObject>().FindAsync(id);
 
+    public IQueryable<TObject> GetQueryable()
+    {
+        return _dataContext.Set<TObject>();
+    }
 }

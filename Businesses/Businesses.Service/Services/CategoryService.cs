@@ -80,8 +80,8 @@ public class CategoryService : BaseService, ICategoryService
         if (category == null)
             return DefaultResponse(StaticNotifications.CategoryNotFound.Message, false);
 
-        var categoryEntity = _mapper.Map<Category>(categoryDto);
-        await _categoryRepository.UpdateAsync(categoryEntity);
+        _mapper.Map(categoryDto, category);
+        await _categoryRepository.UpdateAsync(category);
         return DefaultResponse(StaticNotifications.CategoryUpdated.Message, true);
     }
 }

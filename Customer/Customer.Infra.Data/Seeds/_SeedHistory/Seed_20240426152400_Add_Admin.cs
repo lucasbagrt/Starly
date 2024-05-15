@@ -27,6 +27,6 @@ public class Seed_20240426152400_Add_Admin : Seed
             Username = "admin",
         };
 
-        authService.RegisterAsync(user, StaticUserRoles.USER).Wait();
+        authService.RegisterAsync(user, StaticUserRoles.ADMIN).Wait();
     }
 }

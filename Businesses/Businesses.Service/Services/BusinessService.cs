@@ -10,6 +10,7 @@ using System.Globalization;
 using Businesses.Domain.Dtos;
 using Starly.Domain.Dtos.Default;
 using Businesses.Service.Validators;
+using System.Text.Json;
 
 namespace Businesses.Service.Services;
 
@@ -17,53 +18,40 @@ public class BusinessService : BaseService, IBusinessService
 {
     private readonly NotificationContext _notificationContext;
     private readonly IBusinessRepository _businessRepository;
-    private readonly IBusinessCategoryRepository _businessCategoryRepository;
-    private readonly IBusinessHourRepository _businessHourRepository;
     private readonly IMapper _mapper;
 
     public BusinessService(NotificationContext notificationContext,
-        IBusinessRepository businessRepository, IMapper mapper,
-        IBusinessCategoryRepository businessCategoryRepository, IBusinessHourRepository businessHourRepository)
+        IBusinessRepository businessRepository, IMapper mapper)
     {
         _notificationContext = notificationContext;
         _businessRepository = businessRepository;
         _mapper = mapper;
-        _businessCategoryRepository = businessCategoryRepository;
-        _businessHourRepository = businessHourRepository;
     }
 
     public async Task<DefaultServiceResponseDto> Update(UpdateBusinessDto updateBusinessDto)
     {
         var businessEntity = await _businessRepository.SelectAsync(updateBusinessDto.Id);
         if (businessEntity == null)
-            return DefaultResponse(StaticNotifications.BusinessNotFound.Message, false);
+            return DefaultResponse(StaticNotifications.BusinessNotFound.Message, false);        
 
-        var createBusinessDto = _mapper.Map<CreateBusinessDto>(updateBusinessDto);
-        if (!IsValidBusiness(createBusinessDto))
-            return default;
-         
-        await DeleteCategoriesAsync(businessEntity);
-        await DeleteHoursAsync(businessEntity);        
+        _mapper.Map(updateBusinessDto, businessEntity);
+        if (businessEntity.Hours != null && businessEntity.Hours.Any())
+            foreach (var hour in businessEntity.Hours)
+                hour.IsOvernight = IsOvernight(hour.Start, hour.End);
 
-        var business = _mapper.Map<Business>(createBusinessDto);
-        business.Id = updateBusinessDto.Id;
-
-        await _businessRepository.InsertAsync(business);
-        
-        await InsertCategoriesAsync(business);
-        await InsertHoursAsync(business);
-
-        return DefaultResponse(business.Id > 0 ? StaticNotifications.BusinessSuccess.Message : StaticNotifications.BusinessError.Message, business.Id > 0);
+        businessEntity.UpdatedAt = DateTime.Now;
+        await _businessRepository.UpdateAsync(businessEntity);
+        return DefaultResponse(StaticNotifications.BusinessUpdated.Message, true);
     }
 
     public async Task<DefaultServiceResponseDto> Delete(int id)
     {
-        var business = _businessRepository.SelectAsync(id);
+        var business = await _businessRepository.SelectAsync(id);
         if (business == null)
             return DefaultResponse(StaticNotifications.BusinessNotFound.Message, false);
 
         await _businessRepository.DeleteAsync(id);
-        return DefaultResponse(StaticNotifications.BusinessDeleted.Message, false);
+        return DefaultResponse(StaticNotifications.BusinessDeleted.Message, true);
     }
 
     public async Task<DefaultServiceResponseDto> Create(CreateBusinessDto createBusinessDto)
@@ -72,35 +60,27 @@ public class BusinessService : BaseService, IBusinessService
             return default;
 
         var business = _mapper.Map<Business>(createBusinessDto);
-        business.Active = true;
-        business.CreatedAt = DateTime.Now;
+        if (business.Hours != null && business.Hours.Any())
+            foreach (var hour in business.Hours)
+                hour.IsOvernight = IsOvernight(hour.Start, hour.End);
 
-        await _businessRepository.InsertAsync(business);        
-        await InsertCategoriesAsync(business);
-        await InsertHoursAsync(business);
-
+        await _businessRepository.InsertAsync(business);
         return DefaultResponse(business.Id > 0 ? StaticNotifications.BusinessSuccess.Message : StaticNotifications.BusinessError.Message, business.Id > 0);
     }
 
     public async Task<ICollection<BusinessDto>> GetAllAsync(BusinessFilter filter)
     {
-        var businesses = (await _businessRepository
-            .SelectAsync())
-            .AsQueryable()
+        var businesses = _businessRepository
+            .GetQueryable() 
             .OrderByDescending(u => u.CreatedAt)
             .ApplyFilter(filter);
 
-        var response = new List<BusinessDto>();
+        var response = _mapper.Map<List<BusinessDto>>(businesses);
 
-        foreach (var business in businesses)
-        {
-            var businessDto = _mapper.Map<BusinessDto>(business);
-            businessDto.IsOpenNow = IsBusinessOpenNow(business);
-            businessDto.Photo = business.Photos.FirstOrDefault(t => t.Default)?.PhotoUrl;
-            response.Add(businessDto);
-        }
+        foreach (var business in response)
+            business.IsOpenNow = IsBusinessOpenNow(businesses.FirstOrDefault(b => b.Id == business.Id)?.Hours.ToList());        
 
-        return response;
+        return await Task.FromResult(response);
     }
 
     public async Task<BusinessByIdResponseDto> GetById(int id)
@@ -109,7 +89,8 @@ public class BusinessService : BaseService, IBusinessService
            .SelectAsync(id));
 
         var response = _mapper.Map<BusinessByIdResponseDto>(business);
-        response.IsOpenNow = IsBusinessOpenNow(business);
+        response.IsOpenNow = IsBusinessOpenNow(business.Hours.ToList());
+        response.Location = JsonSerializer.Deserialize<BusinessLocationDto>(business.Location);
         return response;
     }
 
@@ -134,13 +115,13 @@ public class BusinessService : BaseService, IBusinessService
         return true;
     }
 
-    private bool IsBusinessOpenNow(Business business)
+    private bool IsBusinessOpenNow(List<BusinessHour> businessHour)
     {
-        var currentDateTime = DateTime.UtcNow;
+        var currentDateTime = DateTime.Now;
         var currentDayOfWeek = (short)currentDateTime.DayOfWeek;
         var currentTime = currentDateTime.TimeOfDay;
 
-        var todaysBusinessHours = business.Hours.FirstOrDefault(bh => bh.DayOfWeek == currentDayOfWeek);
+        var todaysBusinessHours = businessHour.FirstOrDefault(bh => bh.DayOfWeek == currentDayOfWeek);
 
         if (todaysBusinessHours == null)
             return false;
@@ -175,49 +156,6 @@ public class BusinessService : BaseService, IBusinessService
         var endTime = TimeSpan.ParseExact(end, "hhmm", CultureInfo.InvariantCulture);
 
         return startTime > endTime;
-    }
-
-    private async Task InsertHoursAsync(Business business)
-    {
-        if (business.Hours == null || !business.Hours.Any())
-            return;
-
-        foreach (var hour in business.Hours)
-        {
-            hour.BusinessId = business.Id;
-            hour.IsOvernight = IsOvernight(hour.Start, hour.End);
-            await _businessHourRepository.InsertAsync(hour);
-        }
-    }
-
-    private async Task InsertCategoriesAsync(Business business)
-    {
-        if (business.Categories == null || !business.Categories.Any())
-            return;
-
-        foreach (var category in business.Categories)
-        {
-            category.BusinessId = business.Id;
-            await _businessCategoryRepository.InsertAsync(category);
-        }
-    }
-
-    private async Task DeleteCategoriesAsync(Business business)
-    {
-        if (business.Categories == null || !business.Categories.Any())
-            return;
-
-        foreach (var category in business.Categories)
-            await _businessCategoryRepository.DeleteAsync(category.Id);
-    }
-
-    private async Task DeleteHoursAsync(Business business)
-    {
-        if (business.Hours == null || !business.Hours.Any())
-            return;
-
-        foreach (var hour in business.Hours)
-            await _businessHourRepository.DeleteAsync(hour.Id);
     }
     #endregion
 }
