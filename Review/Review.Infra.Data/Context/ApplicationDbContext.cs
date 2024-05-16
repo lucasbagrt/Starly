@@ -1,21 +1,18 @@
-﻿using Businesses.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Review.Domain.Entities;
 using Starly.Domain.Entities;
 
-namespace Businesses.Infra.Data.Context;
+namespace Review.Infra.Data;
 
 public class ApplicationDbContext : DbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
     }
-
-    public DbSet<Business> Business { get; set; }
-    public DbSet<BusinessHour> BusinessHour { get; set; }
-    public DbSet<BusinessCategory> BusinessCategory { get; set; }
-    public DbSet<BusinessPhoto> BusinessPhoto { get; set; }
-    public DbSet<Category> Category { get; set; }
+    
     public DbSet<SeedHistory> SeedHistory { get; set; }
+    public DbSet<ReviewPhoto> ReviewPhoto { get; set; }
+    public DbSet<Domain.Entities.Review> Review { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -1,9 +1,12 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Review.API.Filters;
 using Review.API.Mapper;
+using Review.Infra.Data;
+using Starly.CrossCutting.Notifications;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -11,7 +14,11 @@ var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 
 #region [DB]
-
+services.AddDbContext<ApplicationDbContext>(options =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("local");
+    options.UseSqlServer(connectionString);
+});
 #endregion
 
 #region [Authentication]
@@ -44,6 +51,7 @@ services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 #endregion
 
 #region [DI]
+services.AddScoped<NotificationContext>();
 #endregion
 
 #region [Swagger]            
@@ -96,7 +104,14 @@ services.AddSwaggerGen();
 var app = builder.Build();
 
 #region [Migrations and Seeds]
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider
+        .GetRequiredService<ApplicationDbContext>();
 
+    dbContext.Database.Migrate();
+    dbContext.EnsureSeedData(scope.ServiceProvider);
+}
 #endregion
 
 #region [Swagger App]            
