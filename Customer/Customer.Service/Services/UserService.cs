@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure.Storage.Blobs;
 using Customer.Domain.Dtos.User;
 using Customer.Domain.Entities;
 using Customer.Domain.Filters;
@@ -11,9 +12,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Starly.CrossCutting.Azure;
 using Starly.CrossCutting.Notifications;
+using Starly.Domain.Dtos;
 using Starly.Domain.Dtos.Default;
 using Starly.Domain.Extensions;
 using Starly.Service.Services;
+using Starly.Service.Validators;
 
 namespace Customer.Service.Services;
 
@@ -24,6 +27,9 @@ public class UserService : BaseService, IUserService
     private readonly UserManager<User> _userManager;
     private readonly IMapper _mapper;
     private readonly NotificationContext _notificationContext;
+    private readonly string _blobUrl;
+    private readonly string _containerName;    
+    private readonly AzureBlobClient _blobClient;
 
     public UserService(
         IUserRepository userRepository,
@@ -37,6 +43,9 @@ public class UserService : BaseService, IUserService
         _mapper = mapper;
         _notificationContext = notificationContext;
         _configuration = configuration;
+        _containerName = configuration["Azure:BlobStorage:ContainerName:UserPhoto"];
+        _blobUrl = configuration["Azure:BlobStorage:UrlBlob"];
+        _blobClient = new AzureBlobClient(configuration["Azure:BlobStorage:ConnectionString"]);
     }
 
     public async Task<ICollection<UserResponseDto>> GetAllAsync(UserFilter filter)
@@ -66,6 +75,19 @@ public class UserService : BaseService, IUserService
         var user = await _userRepository.SelectAsync(id);
         var response = _mapper.Map<UserResponseDto>(user);
         return response;
+    }
+
+    public async Task<UserInfoDto> GetUserInfoAsync(int id)
+    {
+        var user = await _userRepository.SelectAsync(id);               
+        if (user == null) return null;
+
+        return new UserInfoDto
+        {
+            Id = user.Id,
+            Name = user.FirstName != user.LastName ? user.FirstName + " " + user.LastName : user.FirstName,
+            PhotoUrl = user.PhotoUrl
+        };
     }
 
     public async Task<DefaultServiceResponseDto> UpdateAsync(UpdateUserDto updateUserDto, int id)
@@ -161,19 +183,18 @@ public class UserService : BaseService, IUserService
         var validationResult = Validate(file, Activator.CreateInstance<PhotoValidator>());
         if (!validationResult.IsValid) { _notificationContext.AddNotifications(validationResult.Errors); return default; }
 
-        var connectionString = _configuration["Azure:BlobStorage:ConnectionString"]; //TODO: melhorar isso
-        var blobClient = new AzureBlobClient(connectionString);
-
-        var containerName = _configuration["Azure:BlobStorage:ContainerName:UserPhoto"];
-
         var fileExtension = Path.GetExtension(file.FileName);
         var fileName = $"{Guid.NewGuid()}{fileExtension}";
         var stream = file.OpenReadStream();
 
-        await blobClient.Upload(stream, fileName, containerName);
+        await _blobClient.Upload(stream, fileName, _containerName);
 
         var user = await _userManager.FindByIdAsync(id.ToString());
-        user.PhotoUrl = fileName;
+
+        if (!string.IsNullOrWhiteSpace(user.PhotoUrl))
+            await _blobClient.Delete(user.PhotoUrl.Split("/").LastOrDefault(), _containerName);
+
+        user.PhotoUrl = _blobUrl + "/" + _containerName + "/" + fileName;
         await _userManager.UpdateAsync(user);
 
         return new DefaultServiceResponseDto

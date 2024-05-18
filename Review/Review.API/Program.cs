@@ -5,7 +5,13 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Review.API.Filters;
 using Review.API.Mapper;
+using Review.Domain.Interfaces.Integration;
+using Review.Domain.Interfaces.Repositories;
+using Review.Domain.Interfaces.Services;
 using Review.Infra.Data;
+using Review.Infra.Data.Repositories;
+using Review.Service.Integration;
+using Review.Service.Services;
 using Starly.CrossCutting.Notifications;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -52,6 +58,13 @@ services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 #region [DI]
 services.AddScoped<NotificationContext>();
+
+services.AddScoped<IReviewService, ReviewService>();
+services.AddScoped<IReviewRepository, ReviewRepository>();
+services.AddScoped<IReviewPhotoRepository, ReviewPhotoRepository>();
+
+services.AddScoped<IBusinessIntegration, BusinessIntegration>();
+services.AddScoped<IUserIntegration, UserIntegration>();
 #endregion
 
 #region [Swagger]            

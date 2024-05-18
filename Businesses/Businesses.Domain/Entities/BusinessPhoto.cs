@@ -8,5 +8,5 @@ public class BusinessPhoto : IEntity<int>
     public int BusinessId { get; set; }
     public string PhotoUrl { get; set; }
     public bool Default { get; set;}
-    public DateTime CreatedAt { get; set;}
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
 }

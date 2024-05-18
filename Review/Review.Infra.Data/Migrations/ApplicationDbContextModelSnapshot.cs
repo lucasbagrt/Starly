@@ -33,11 +33,20 @@ namespace Review.Infra.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("BusinessId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<short>("Rating")
                         .HasColumnType("smallint");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -63,6 +72,8 @@ namespace Review.Infra.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ReviewId");
+
                     b.ToTable("ReviewPhoto");
                 });
 
@@ -83,6 +94,20 @@ namespace Review.Infra.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SeedHistory");
+                });
+
+            modelBuilder.Entity("Review.Domain.Entities.ReviewPhoto", b =>
+                {
+                    b.HasOne("Review.Domain.Entities.Review", null)
+                        .WithMany("Photos")
+                        .HasForeignKey("ReviewId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Review.Domain.Entities.Review", b =>
+                {
+                    b.Navigation("Photos");
                 });
 #pragma warning restore 612, 618
         }

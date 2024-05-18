@@ -59,9 +59,33 @@ public class BusinessController : Controller
 
     [HttpPut]
     [Authorize(Roles = StaticUserRoles.ADMIN)]
-    public async Task<IActionResult> Update(UpdateBusinessDto updateBusinessDto)
+    public async Task<IActionResult> Update([FromBody] UpdateBusinessDto updateBusinessDto)
     {
         var response = await _businessService.Update(updateBusinessDto);
+        return Ok(response);
+    }
+
+    [HttpPost("UploadPhoto")]
+    [Authorize(Roles = StaticUserRoles.ADMIN)]
+    public async Task<IActionResult> UploadPhotos([FromForm] UploadPhotoDto uploadPhotoDto)
+    {
+        var response = await _businessService.UploadPhoto(uploadPhotoDto);
+        return Ok(response);
+    }
+
+    [HttpPut("DeletePhoto/{id}")]
+    [Authorize(Roles = StaticUserRoles.ADMIN)]
+    public async Task<IActionResult> DeletePhoto(int id)
+    {
+        var response = await _businessService.DeletePhoto(id);
+        return Ok(response);
+    }
+
+    [HttpGet("ExistsById/{id}")]
+    [Authorize]
+    public async Task<IActionResult> ExistsById(int id)
+    {
+        var response = await _businessService.ExistsById(id);
         return Ok(response);
     }
 }

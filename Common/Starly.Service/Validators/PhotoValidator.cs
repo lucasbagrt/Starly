@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Http;
 
-namespace Customer.Service.Validators;
+namespace Starly.Service.Validators;
 
 public class PhotoValidator : AbstractValidator<IFormFile>
 {

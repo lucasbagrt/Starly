@@ -23,6 +23,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\Common\Starly.CrossCutting\Starly.CrossCutting.csproj" />
 		<ProjectReference Include="..\Review.Infra.Data\Review.Infra.Data.csproj" />
+		<ProjectReference Include="..\Review.Service\Review.Service.csproj" />
 	</ItemGroup>
 
 </Project>

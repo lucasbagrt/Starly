@@ -23,6 +23,7 @@ public static class StaticNotifications
     public static Notification BusinessError = new("BusinessError", "Erro ao inserir empresa!");
     public static Notification BusinessDeleted = new("BusinessDeleted", "Empresa deletada com sucesso!");
     public static Notification BusinessNotFound = new("BusinessNotFound", "Empresa não encontrada!");
+    public static Notification BusinessPhotoNotFound = new("BusinessPhotoNotFound", "Foto não encontrada!");
     #endregion
 
     #region [Category]
@@ -31,5 +32,14 @@ public static class StaticNotifications
     public static Notification CategoryError = new("CategoryError", "Erro ao inserir categoria!");
     public static Notification CategoryNotFound = new("CategoryNotFound", "Categoria não encontrada!");
     public static Notification CategoryDeleted = new("CategoryDeleted", "Categoria deletada com sucesso!");
+    #endregion
+
+    #region [Review]
+    public static Notification ReviewError = new("ReviewError", "Erro ao inserir avaliação!");
+    public static Notification ReviewSuccess = new("ReviewSuccess", "Avaliação inserida com sucesso!");
+    public static Notification ReviewNotFound = new("ReviewNotFound", "Avaliação não encontrada!");
+    public static Notification ReviewDeleted = new("ReviewDeleted", "Avaliação deletada com sucesso!");
+    public static Notification ReviewUpdated = new("ReviewUpdated", "Avaliação atualizada com sucesso!");
+    public static Notification ReviewPhotoUploaded = new("ReviewPhotoUploaded", "Fotos enviadas com sucesso!");
     #endregion
 }

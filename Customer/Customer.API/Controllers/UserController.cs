@@ -8,6 +8,7 @@ using Customer.Domain.Interfaces.Services;
 using Customer.Domain.Dtos.User;
 using Customer.Domain.Filters;
 using Starly.Domain.Utilities;
+using Starly.Domain.Dtos;
 
 namespace Customer.API.Controllers;
 
@@ -51,6 +52,24 @@ public class UserController : Controller
     public async Task<IActionResult> GetById(int id)
     {
         var user = await _userService.GetByIdAsync(id);
+        if (user is null)
+            return NotFound();
+
+        return Ok(user);
+    }
+
+    [HttpGet("GetUserInfo/{id}")]
+    [Authorize]
+    [SwaggerOperation(Summary = "Get user info")]
+    [SwaggerResponse((int)HttpStatusCode.OK, Type = typeof(UserInfoDto))]
+    [SwaggerResponse((int)HttpStatusCode.NoContent)]
+    [SwaggerResponse((int)HttpStatusCode.BadRequest, Type = typeof(IReadOnlyCollection<dynamic>))]
+    [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
+    [SwaggerResponse((int)HttpStatusCode.Unauthorized)]
+    [SwaggerResponse((int)HttpStatusCode.Forbidden)]
+    public async Task<IActionResult> GetUserInfo(int id)
+    {
+        var user = await _userService.GetUserInfoAsync(id);
         if (user is null)
             return NotFound();
 

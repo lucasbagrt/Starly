@@ -9,5 +9,5 @@ public class UpdateBusinessDto
     public string Phone { get; set; }
     public BusinessLocationDto Location { get; set; }
     public List<UpdateBusinessCategoryDto> Categories { get; set; }
-    public List<BusinessHour> Hours { get; set; }
+    public List<BusinessHour> Hours { get; set; }    
 }

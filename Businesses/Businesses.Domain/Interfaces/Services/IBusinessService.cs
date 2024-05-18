@@ -11,4 +11,7 @@ public interface IBusinessService
     Task<DefaultServiceResponseDto> Create(CreateBusinessDto createBusinessDto);
     Task<DefaultServiceResponseDto> Delete(int id);
     Task<DefaultServiceResponseDto> Update(UpdateBusinessDto updateBusinessDto);
+    Task<DefaultServiceResponseDto> UploadPhoto(UploadPhotoDto uploadPhotoDto);
+    Task<DefaultServiceResponseDto> DeletePhoto(int photoId);
+    Task<bool> ExistsById(int id);
 }

@@ -67,6 +67,7 @@ services.AddScoped<IBusinessHourRepository, BusinessHourRepository>();
 services.AddScoped<IBusinessCategoryRepository, BusinessCategoryRepository>();
 services.AddScoped<IBusinessRepository, BusinessRepository>();
 services.AddScoped<ICategoryRepository, CategoryRepository>();
+services.AddScoped<IBusinessPhotoRepository, BusinessPhotoRepository>();
 #endregion
 
 #region [Swagger]            
