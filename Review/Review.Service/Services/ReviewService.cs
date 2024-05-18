@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Http;
 using Starly.Service.Validators;
 using Review.Domain.Entities;
 using Review.Domain.Interfaces.Integration;
-using Azure.Core;
 
 namespace Review.Service.Services;
 
@@ -46,6 +45,11 @@ public class ReviewService : BaseService, IReviewService
         _configuration = configuration;
         _businessIntegration = businessIntegration;
         _userIntegration = userIntegration;
+    }
+
+    public async Task<Tuple<long, double>> GetCountAndRatingByBusiness(int businessId)
+    {
+        return await _reviewRepository.GetReviewCountAndRatingAsync(businessId);
     }
 
     public async Task<DefaultServiceResponseDto> UploadPhoto(UploadPhotoDto uploadPhotoDto, int userId)
@@ -185,6 +189,6 @@ public class ReviewService : BaseService, IReviewService
 
         _notificationContext.AddNotification(
         StaticNotifications.BusinessNotFound.Key, StaticNotifications.BusinessNotFound.Message); return false;
-    }
+    }   
     #endregion
 }

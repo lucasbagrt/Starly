@@ -19,15 +19,23 @@ public class ReviewController : Controller
         _reviewService = reviewService;
     }
 
+    [HttpGet("CountAndRatingByBusiness/{businessId}")]
+    [Authorize]
+    public async Task<IActionResult> GetCountAndRatingByBusiness(int businessId)
+    {
+        var response = await _reviewService.GetCountAndRatingByBusiness(businessId);        
+        return Ok(response);
+    }
+
     [HttpGet]
     [Authorize]
     public async Task<IActionResult> GetAll([FromQuery] ReviewFilter filter)
     {
-        var categories = await _reviewService.GetAllAsync(filter, this.GetAccessToken());
-        if (categories == null)
+        var reviews = await _reviewService.GetAllAsync(filter, this.GetAccessToken());
+        if (reviews == null)
             return NotFound();
 
-        return Ok(categories);
+        return Ok(reviews);
     }
 
     [HttpGet("{id}")]

@@ -3,6 +3,7 @@ using Businesses.Domain.Filters;
 using Businesses.Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Starly.Domain.Extensions;
 using Starly.Domain.Utilities;
 
 namespace Businesses.API.Controllers;
@@ -23,7 +24,7 @@ public class BusinessController : Controller
     [Authorize]
     public async Task<IActionResult> GetAll([FromQuery] BusinessFilter filter)
     {
-        var businesses = await _businessService.GetAllAsync(filter);
+        var businesses = await _businessService.GetAllAsync(filter, this.GetAccessToken());
         if (businesses == null)
             return NotFound();
 
@@ -34,7 +35,7 @@ public class BusinessController : Controller
     [Authorize]
     public async Task<IActionResult> GetById(int id)
     {
-        var business = await _businessService.GetById(id);
+        var business = await _businessService.GetById(id, this.GetAccessToken());
         if (business == null)
             return NotFound();
 

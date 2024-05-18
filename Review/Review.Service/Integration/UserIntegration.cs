@@ -27,8 +27,8 @@ public class UserIntegration : IUserIntegration
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
             var response = await _httpClient.GetAsync(url);
-            var stringResponse = response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<UserInfoDto>(stringResponse.Result);
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<UserInfoDto>(stringResponse);
         }
     }
 }

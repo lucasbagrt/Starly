@@ -10,5 +10,7 @@ public class BusinessDto
     public DateTime? UpdatedAt { get; set; }
     public bool IsOpenNow { get; set; }
     public string Photo { get; set; }
+    public long ReviewCount { get; set; }
+    public double AverageRating { get; set; }
     public List<BusinessCategoryDto> Categories { get; set; }    
 }

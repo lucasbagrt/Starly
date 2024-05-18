@@ -1,10 +1,12 @@
 using AutoMapper;
 using Businesses.API.Filters;
 using Businesses.API.Mapper;
+using Businesses.Domain.Interfaces.Integration;
 using Businesses.Domain.Interfaces.Repositories;
 using Businesses.Domain.Interfaces.Services;
 using Businesses.Infra.Data.Context;
 using Businesses.Infra.Data.Repositories;
+using Businesses.Service.Integration;
 using Businesses.Service.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -68,6 +70,8 @@ services.AddScoped<IBusinessCategoryRepository, BusinessCategoryRepository>();
 services.AddScoped<IBusinessRepository, BusinessRepository>();
 services.AddScoped<ICategoryRepository, CategoryRepository>();
 services.AddScoped<IBusinessPhotoRepository, BusinessPhotoRepository>();
+
+services.AddScoped<IReviewIntegration, ReviewIntegration>();
 #endregion
 
 #region [Swagger]            

@@ -26,8 +26,8 @@ public class BusinessIntegration : IBusinessIntegration
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
             var response = await _httpClient.GetAsync(url);
-            var stringResponse = response.Content.ReadAsStringAsync();
-            return Convert.ToBoolean(stringResponse.Result);
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            return Convert.ToBoolean(stringResponse);
         }
     }
 }

@@ -15,6 +15,7 @@ using Starly.CrossCutting.Azure;
 using Microsoft.Extensions.Configuration;
 using Starly.Service.Validators;
 using Microsoft.AspNetCore.Http;
+using Businesses.Domain.Interfaces.Integration;
 
 namespace Businesses.Service.Services;
 
@@ -28,10 +29,11 @@ public class BusinessService : BaseService, IBusinessService
     private readonly string _blobUrl;
     private readonly string _containerName;
     private readonly AzureBlobClient _blobClient;
+    private readonly IReviewIntegration _reviewIntegration;
 
     public BusinessService(NotificationContext notificationContext,
         IBusinessRepository businessRepository, IMapper mapper, IConfiguration configuration,
-        IBusinessPhotoRepository businessPhotoRepository)
+        IBusinessPhotoRepository businessPhotoRepository, IReviewIntegration reviewIntegration)
     {
         _configuration = configuration;
         _notificationContext = notificationContext;
@@ -41,6 +43,7 @@ public class BusinessService : BaseService, IBusinessService
         _blobUrl = configuration["Azure:BlobStorage:UrlBlob"];
         _blobClient = new AzureBlobClient(configuration["Azure:BlobStorage:ConnectionString"]);
         _businessPhotoRepository = businessPhotoRepository;
+        _reviewIntegration = reviewIntegration;
     }
 
     public async Task<bool> ExistsById(int id)
@@ -128,7 +131,7 @@ public class BusinessService : BaseService, IBusinessService
         return DefaultResponse(business.Id > 0 ? StaticNotifications.BusinessSuccess.Message : StaticNotifications.BusinessError.Message, business.Id > 0);
     }
 
-    public async Task<ICollection<BusinessDto>> GetAllAsync(BusinessFilter filter)
+    public async Task<ICollection<BusinessDto>> GetAllAsync(BusinessFilter filter, string accessToken)
     {
         var businesses = _businessRepository
             .GetQueryable()
@@ -138,12 +141,17 @@ public class BusinessService : BaseService, IBusinessService
         var response = _mapper.Map<List<BusinessDto>>(businesses);
 
         foreach (var business in response)
+        {
             business.IsOpenNow = IsBusinessOpenNow(businesses.FirstOrDefault(b => b.Id == business.Id)?.Hours.ToList());
+            var reviewCountAndRating = await _reviewIntegration.GetReviewCountAndRatingAsync(business.Id, accessToken);
+            business.ReviewCount = reviewCountAndRating.Item1;
+            business.AverageRating = reviewCountAndRating.Item2;
+        }
 
         return await Task.FromResult(response);
     }
 
-    public async Task<BusinessByIdResponseDto> GetById(int id)
+    public async Task<BusinessByIdResponseDto> GetById(int id, string accessToken)
     {
         var business = (await _businessRepository
            .SelectAsync(id));
@@ -151,6 +159,10 @@ public class BusinessService : BaseService, IBusinessService
         var response = _mapper.Map<BusinessByIdResponseDto>(business);
         response.IsOpenNow = IsBusinessOpenNow(business.Hours.ToList());
         response.Location = JsonSerializer.Deserialize<BusinessLocationDto>(business.Location);
+        response.Reviews = await _reviewIntegration.GetAllAsync(id, accessToken);
+        response.ReviewCount = response.Reviews.Count;
+        response.AverageRating = response.Reviews.Average(t => t.Rating);
+
         return response;
     }
 
