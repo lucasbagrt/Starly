@@ -64,7 +64,7 @@ public class BusinessService : BaseService, IBusinessService
         await DeletePhotosAsync(businessPhoto);
         await _businessPhotoRepository.DeleteAsync(photoId);
 
-        return DefaultResponse(StaticNotifications.ReviewPhotoUploaded.Message, true);
+        return DefaultResponse(StaticNotifications.BusinessPhotoDeleted.Message, true);
     }
 
     public async Task<DefaultServiceResponseDto> UploadPhoto(UploadPhotoDto uploadPhotoDto)
@@ -85,7 +85,7 @@ public class BusinessService : BaseService, IBusinessService
 
         await _businessRepository.UpdateAsync(business);
 
-        return DefaultResponse(StaticNotifications.ReviewPhotoUploaded.Message, true);
+        return DefaultResponse(StaticNotifications.BusinessPhotoUploaded.Message, true);
     }
 
     public async Task<DefaultServiceResponseDto> Update(UpdateBusinessDto updateBusinessDto)

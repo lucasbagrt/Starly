@@ -162,11 +162,12 @@ public class BusinessControllerTests : IClassFixture<ApiApplicationFactory<Progr
         var businessByIdResponseDto = await responseBusinessById.Content.ReadFromJsonAsync<BusinessByIdResponseDto>();
 
         Assert.True(businessResponseDto.Success);
-        Assert.Equal(businessResponseDto.Message, StaticNotifications.BusinessSuccess.Message);                       
+        Assert.Equal(businessResponseDto.Message, StaticNotifications.BusinessSuccess.Message);
                 
         Assert.NotNull(businessByIdResponseDto);        
         Assert.Equal(businessDto.Name, businessByIdResponseDto.Name);
-        Assert.Equal(businessDto.Phone, businessByIdResponseDto.Phone);                
+        Assert.Equal(businessDto.Phone, businessByIdResponseDto.Phone);
+        Assert.True(businessByIdResponseDto.Hours.FirstOrDefault(t => t.DayOfWeek == 6).IsOvernight);
     }
 
     [Fact]
