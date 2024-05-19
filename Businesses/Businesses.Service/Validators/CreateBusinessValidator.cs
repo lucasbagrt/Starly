@@ -8,15 +8,23 @@ public class CreateBusinessValidator : AbstractValidator<CreateBusinessDto>
     public CreateBusinessValidator()
     {
         RuleFor(x => x.Name)
-           .NotNull().NotEmpty()
+           .NotEmpty()
            .WithMessage("Informe o nome.");
 
+        RuleFor(x => x.Phone)
+           .NotEmpty()
+           .WithMessage("Informe o telefone.");
+
         RuleFor(x => x.Categories)
-           .NotNull()
+           .NotEmpty()
            .WithMessage("Informe pelo menos uma categoria.");
 
+        RuleFor(x => x.Location)
+           .NotEmpty()
+           .WithMessage("Informe a localização.");
+
         RuleFor(x => x.Hours)
-           .NotNull()
+           .NotEmpty()
            .WithMessage("Informe o horario de funcionamento.");
     }
 }

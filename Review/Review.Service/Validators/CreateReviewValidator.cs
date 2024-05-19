@@ -8,7 +8,7 @@ public class CreateReviewValidator : AbstractValidator<CreateReviewDto>
     public CreateReviewValidator()
     {
         RuleFor(x => x.Comment)
-           .NotNull().NotEmpty()
+           .NotEmpty()
            .WithMessage("Informe o comentario.");
 
         RuleFor(x => x.Rating)

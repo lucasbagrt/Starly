@@ -47,6 +47,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Review.Domain", "Review\Rev
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Review.Infra.Data", "Review\Review.Infra.Data\Review.Infra.Data.csproj", "{FA53284A-C37C-4F35-AF5A-1388D93EF18D}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Businesses.API.IntegrationTests", "Businesses\Businesses.API.IntegrationTests\Businesses.API.IntegrationTests.csproj", "{87A42EC5-3123-41B1-9645-792C7FDCC669}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -121,6 +123,10 @@ Global
 		{FA53284A-C37C-4F35-AF5A-1388D93EF18D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA53284A-C37C-4F35-AF5A-1388D93EF18D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA53284A-C37C-4F35-AF5A-1388D93EF18D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87A42EC5-3123-41B1-9645-792C7FDCC669}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87A42EC5-3123-41B1-9645-792C7FDCC669}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87A42EC5-3123-41B1-9645-792C7FDCC669}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87A42EC5-3123-41B1-9645-792C7FDCC669}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -143,6 +149,7 @@ Global
 		{6D5F95EB-3A1C-45CB-BED4-183ABFD1F02C} = {A4671A8A-6036-4CD9-8E3E-BBABAB4FEB43}
 		{ACF84B5D-A3B8-4A2D-9377-D2CAC862514A} = {A4671A8A-6036-4CD9-8E3E-BBABAB4FEB43}
 		{FA53284A-C37C-4F35-AF5A-1388D93EF18D} = {A4671A8A-6036-4CD9-8E3E-BBABAB4FEB43}
+		{87A42EC5-3123-41B1-9645-792C7FDCC669} = {BDD1CFE2-3758-43C7-84C0-5A3F2828D90F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E83AFE66-715C-4E03-8801-FB2623568DE0}

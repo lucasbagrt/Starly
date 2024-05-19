@@ -7,13 +7,11 @@ public class CreateBusinessHourValidator : AbstractValidator<CreateBusinessHourD
 {
     public CreateBusinessHourValidator()
     {
-        RuleFor(x => x.Start)
-           .NotNull()
+        RuleFor(x => x.Start)           
            .NotEmpty()           
            .WithMessage("Informe o horario de abertura.");
 
-        RuleFor(x => x.End)
-           .NotNull()
+        RuleFor(x => x.End)           
            .NotEmpty()
            .WithMessage("Informe o horario de encerramento.");
     }

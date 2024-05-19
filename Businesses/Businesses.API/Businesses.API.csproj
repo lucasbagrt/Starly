@@ -32,4 +32,8 @@
 		<ProjectReference Include="..\Businesses.Service\Businesses.Service.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="Businesses.API.IntegrationTests" />
+	</ItemGroup>
+	
 </Project>

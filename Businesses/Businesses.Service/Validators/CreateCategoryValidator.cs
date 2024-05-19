@@ -7,8 +7,7 @@ public class CreateCategoryValidator : AbstractValidator<CreateCategoryDto>
 {
     public CreateCategoryValidator()
     {
-        RuleFor(x => x.Name)
-           .NotNull()
+        RuleFor(x => x.Name)           
            .NotEmpty()
            .WithMessage("Informe o nome da categoria.");
     }

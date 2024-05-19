@@ -144,8 +144,11 @@ public class BusinessService : BaseService, IBusinessService
         {
             business.IsOpenNow = IsBusinessOpenNow(businesses.FirstOrDefault(b => b.Id == business.Id)?.Hours.ToList());
             var reviewCountAndRating = await _reviewIntegration.GetReviewCountAndRatingAsync(business.Id, accessToken);
-            business.ReviewCount = reviewCountAndRating.Item1;
-            business.AverageRating = reviewCountAndRating.Item2;
+            if (reviewCountAndRating != null)
+            {
+                business.ReviewCount = reviewCountAndRating.Item1;
+                business.AverageRating = reviewCountAndRating.Item2;
+            }
         }
 
         return await Task.FromResult(response);
@@ -156,12 +159,17 @@ public class BusinessService : BaseService, IBusinessService
         var business = (await _businessRepository
            .SelectAsync(id));
 
+        if (business == null) return null;
+
         var response = _mapper.Map<BusinessByIdResponseDto>(business);
         response.IsOpenNow = IsBusinessOpenNow(business.Hours.ToList());
         response.Location = JsonSerializer.Deserialize<BusinessLocationDto>(business.Location);
         response.Reviews = await _reviewIntegration.GetAllAsync(id, accessToken);
-        response.ReviewCount = response.Reviews.Count;
-        response.AverageRating = response.Reviews.Average(t => t.Rating);
+        if (response.Reviews != null && response.Reviews.Any())
+        {
+            response.ReviewCount = response.Reviews.Count;
+            response.AverageRating = response.Reviews.Average(t => t.Rating);
+        }
 
         return response;
     }

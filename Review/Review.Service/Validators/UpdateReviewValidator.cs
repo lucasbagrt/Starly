@@ -12,7 +12,7 @@ public class UpdateReviewValidator : AbstractValidator<UpdateReviewDto>
           .WithMessage("Informe o id.");
 
         RuleFor(x => x.Comment)
-           .NotNull().NotEmpty()
+           .NotEmpty()
            .WithMessage("Informe o comentario.");
 
         RuleFor(x => x.Rating)
