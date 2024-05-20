@@ -26,7 +26,7 @@ public class ReviewIntegration : IReviewIntegration
             using (var _httpClient = new HttpClient())
             {
                 var url = @$"{_baseUrl}?businessId={businessId}";
-                _httpClient.Timeout = TimeSpan.FromMicroseconds(300);
+                _httpClient.Timeout = TimeSpan.FromSeconds(1);
                 _httpClient.BaseAddress = new Uri(url);
                 _httpClient.DefaultRequestHeaders.Accept.Clear();
                 _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -53,7 +53,7 @@ public class ReviewIntegration : IReviewIntegration
             using (var _httpClient = new HttpClient())
             {
                 var url = @$"{_baseUrl}/CountAndRatingByBusiness/{businessId}";
-                _httpClient.Timeout = TimeSpan.FromMicroseconds(300);
+                _httpClient.Timeout = TimeSpan.FromSeconds(1);
                 _httpClient.BaseAddress = new Uri(url);
                 _httpClient.DefaultRequestHeaders.Accept.Clear();
                 _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

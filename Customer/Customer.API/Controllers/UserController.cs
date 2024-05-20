@@ -69,7 +69,7 @@ public class UserController : Controller
     [SwaggerResponse((int)HttpStatusCode.Forbidden)]
     public async Task<IActionResult> GetUserInfo(int id)
     {
-        var user = await _userService.GetUserInfoAsync(id);
+        var user = await _userService.GetUserInfoAsync(id, this.GetUserIdLogged());
         if (user is null)
             return NotFound();
 

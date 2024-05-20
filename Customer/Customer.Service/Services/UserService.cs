@@ -28,7 +28,7 @@ public class UserService : BaseService, IUserService
     private readonly IMapper _mapper;
     private readonly NotificationContext _notificationContext;
     private readonly string _blobUrl;
-    private readonly string _containerName;    
+    private readonly string _containerName;
     private readonly AzureBlobClient _blobClient;
 
     public UserService(
@@ -67,6 +67,12 @@ public class UserService : BaseService, IUserService
 
         var response = _mapper.Map<List<UserResponseDto>>(users);
 
+        foreach (var user in response)
+        {
+            var userRoles = await _userManager.GetRolesAsync(await _userManager.FindByIdAsync(user.Id.ToString()));
+            user.Role = userRoles.FirstOrDefault();
+        }
+
         return response;
     }
 
@@ -74,12 +80,15 @@ public class UserService : BaseService, IUserService
     {
         var user = await _userRepository.SelectAsync(id);
         var response = _mapper.Map<UserResponseDto>(user);
+        var userRoles = await _userManager.GetRolesAsync(await _userManager.FindByIdAsync(user.Id.ToString()));
+        response.Role = userRoles.FirstOrDefault();
         return response;
     }
 
-    public async Task<UserInfoDto> GetUserInfoAsync(int id)
+    public async Task<UserInfoDto> GetUserInfoAsync(int id, int userIdLogged)
     {
-        var user = await _userRepository.SelectAsync(id);               
+        var userId = id > 0 ? id : userIdLogged;
+        var user = await _userRepository.SelectAsync(userId);
         if (user == null) return null;
 
         return new UserInfoDto

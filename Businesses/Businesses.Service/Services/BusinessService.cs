@@ -143,6 +143,8 @@ public class BusinessService : BaseService, IBusinessService
         foreach (var business in response)
         {
             business.IsOpenNow = IsBusinessOpenNow(businesses.FirstOrDefault(b => b.Id == business.Id)?.Hours.ToList());
+            business.Photo = businesses.FirstOrDefault(t => t.Id == business.Id).Photos?.FirstOrDefault(t => t.Default)?.PhotoUrl;
+
             var reviewCountAndRating = await _reviewIntegration.GetReviewCountAndRatingAsync(business.Id, accessToken);
             if (reviewCountAndRating != null)
             {

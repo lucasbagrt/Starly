@@ -10,7 +10,7 @@ public interface IUserService
 {
     Task<ICollection<UserResponseDto>> GetAllAsync(UserFilter filter);
     Task<UserResponseDto> GetByIdAsync(int id);
-    Task<UserInfoDto> GetUserInfoAsync(int id);
+    Task<UserInfoDto> GetUserInfoAsync(int id, int userIdLogged);
     Task<DefaultServiceResponseDto> UpdateAsync(UpdateUserDto updateUserDto, int id);
     Task<DefaultServiceResponseDto> UpdatePasswordAsync(UpdateUserPasswordDto updateUserPasswordDto, int id);
     Task<DefaultServiceResponseDto> DeleteAsync(int id);
