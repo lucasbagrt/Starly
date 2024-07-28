@@ -11,16 +11,13 @@ builder.Services.AddOcelot(builder.Configuration);
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+app.UseDeveloperExceptionPage();
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseDeveloperExceptionPage();
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Gateway v1");
-        c.InjectStylesheet("/swagger-ui/SwaggerDark.css");
-    });
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Gateway v1");
+    c.InjectStylesheet("/swagger-ui/SwaggerDark.css");
+});
 
 #region [Cors]            
 app.UseCors(x => x

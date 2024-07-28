@@ -1,0 +1,13 @@
+﻿apiVersion: v1
+kind: Service
+metadata:
+  name: apireview-loadbalancer
+spec:
+  selector:
+    app: apireview
+  ports:
+    - protocol: TCP
+      port: 86
+      targetPort: 86
+      nodePort: 31843
+  type: LoadBalancer

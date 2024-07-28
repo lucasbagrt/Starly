@@ -1,0 +1,13 @@
+﻿apiVersion: v1
+kind: Service
+metadata:
+  name: apibusiness-loadbalancer
+spec:
+  selector:
+    app: apibusiness
+  ports:
+    - protocol: TCP
+      port: 82
+      targetPort: 82
+      nodePort: 31841
+  type: LoadBalancer

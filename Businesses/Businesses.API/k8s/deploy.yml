@@ -1,0 +1,19 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apibusiness
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: apibusiness
+  template:
+    metadata:
+      labels:
+        app: apibusiness
+    spec:
+      containers:
+        - name: apibusiness
+          image: bagrt/starly-business:latest
+          ports:
+            - containerPort: 82

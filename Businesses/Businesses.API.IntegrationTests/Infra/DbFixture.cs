@@ -14,7 +14,7 @@ public class DbFixture : IDisposable
 
     public DbFixture()
     {
-        ConnectionString = $"Server=localhost;Database={DatabaseName};User ID=sa;Password=1q2w3e4r@#$;Trusted_Connection=false;TrustServerCertificate=true;MultipleActiveResultSets=true;";
+        ConnectionString = $"Server=host.docker.internal,1433;Database={DatabaseName};User ID=sa;Password=1q2w3e4r@#$;Trusted_Connection=false;TrustServerCertificate=true;MultipleActiveResultSets=true;";
 
         var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
         builder.UseSqlServer(ConnectionString);

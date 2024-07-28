@@ -1,0 +1,19 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apireview
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: apireview
+  template:
+    metadata:
+      labels:
+        app: apireview
+    spec:
+      containers:
+        - name: apireview
+          image: bagrt/starly-review:latest
+          ports:
+            - containerPort: 86
